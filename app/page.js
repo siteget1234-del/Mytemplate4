@@ -500,23 +500,23 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-emerald-700 text-white sticky top-0 z-50 shadow-lg">
-        <div className="container mx-auto px-4 py-4">
+      <header className="bg-gradient-to-r from-emerald-700 to-emerald-600 text-white sticky top-0 z-50 shadow-xl">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3" onClick={() => { setSelectedCategory(null); setShowSearch(false); setSearchQuery(''); }} style={{ cursor: 'pointer' }}>
-              <div className="text-4xl">🌾</div>
+            <div className="flex items-center space-x-2" onClick={() => { setSelectedCategory(null); setShowSearch(false); setSearchQuery(''); }} style={{ cursor: 'pointer' }}>
+              <div className="text-3xl">🌾</div>
               <div>
-                <h1 className="text-xl md:text-2xl font-bold">श्री गणेश कृषी केंद्र</h1>
-                <p className="text-xs md:text-sm text-emerald-100">जि. नाशिक</p>
+                <h1 className="text-lg md:text-xl font-bold leading-tight">श्री गणेश कृषी केंद्र</h1>
+                <p className="text-xs text-emerald-100">जि. नाशिक</p>
               </div>
             </div>
             <button 
               onClick={() => setShowCart(true)}
-              className="relative p-2 hover:bg-emerald-600 rounded-full transition"
+              className="relative p-2 hover:bg-emerald-600 rounded-full transition-all duration-200 active:scale-95"
             >
               <ShoppingCart className="w-6 h-6" />
               {cartItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold animate-pulse">
                   {cartItemCount}
                 </span>
               )}
@@ -524,7 +524,7 @@ export default function Home() {
           </div>
 
           {/* Search Bar */}
-          <div className="mt-4">
+          <div className="mt-3">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
@@ -537,7 +537,7 @@ export default function Home() {
                   setSelectedCategory(null);
                 }}
                 onFocus={() => setShowSearch(true)}
-                className="w-full pl-10 pr-4 py-3 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-300"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-300 shadow-md transition-all duration-200"
               />
             </div>
           </div>
