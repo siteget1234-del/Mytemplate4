@@ -546,35 +546,31 @@ export default function Home() {
 
       {/* Banner Carousel */}
       {!showSearch && !selectedCategory && (
-        <section className="relative overflow-hidden">
-          <div className="relative h-48 md:h-64">
+        <section className="relative overflow-hidden bg-emerald-700">
+          <div className="relative h-56 md:h-72">
             {BANNERS.map((banner, index) => (
               <div
                 key={banner.id}
-                className={`absolute inset-0 transition-all duration-500 transform ${
-                  index === currentBanner 
-                    ? 'translate-x-0 opacity-100' 
-                    : index < currentBanner 
-                    ? '-translate-x-full opacity-0' 
-                    : 'translate-x-full opacity-0'
+                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                  index === currentBanner ? 'opacity-100 z-10' : 'opacity-0 z-0'
                 }`}
               >
-                <div className={`h-full bg-gradient-to-br ${banner.bg} text-white flex flex-col items-center justify-center`}>
-                  <h2 className="text-3xl md:text-5xl font-bold mb-3">{banner.title}</h2>
-                  <p className="text-lg md:text-xl text-emerald-100">{banner.subtitle}</p>
+                <div className={`h-full bg-gradient-to-br ${banner.bg} text-white flex flex-col items-center justify-center px-4`}>
+                  <h2 className="text-3xl md:text-5xl font-bold mb-3 text-center">{banner.title}</h2>
+                  <p className="text-lg md:text-xl text-white/90 text-center">{banner.subtitle}</p>
                 </div>
               </div>
             ))}
           </div>
           
           {/* Banner Navigation */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
             {BANNERS.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentBanner(index)}
-                className={`w-2 h-2 rounded-full transition ${
-                  index === currentBanner ? 'bg-white w-6' : 'bg-white/50'
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  index === currentBanner ? 'bg-white w-8' : 'bg-white/50 w-2'
                 }`}
               />
             ))}
@@ -583,15 +579,15 @@ export default function Home() {
           {/* Arrow buttons */}
           <button
             onClick={() => setCurrentBanner((currentBanner - 1 + BANNERS.length) % BANNERS.length)}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 p-2 rounded-full transition"
+            className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/20 hover:bg-black/30 p-2 rounded-full transition z-20"
           >
-            <ChevronLeft className="w-6 h-6 text-white" />
+            <ChevronLeft className="w-5 h-5 text-white" />
           </button>
           <button
             onClick={() => setCurrentBanner((currentBanner + 1) % BANNERS.length)}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 p-2 rounded-full transition"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/20 hover:bg-black/30 p-2 rounded-full transition z-20"
           >
-            <ChevronRight className="w-6 h-6 text-white" />
+            <ChevronRight className="w-5 h-5 text-white" />
           </button>
         </section>
       )}
