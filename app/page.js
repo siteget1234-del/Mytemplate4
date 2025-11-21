@@ -649,25 +649,26 @@ export default function Home() {
             <p className="text-gray-500 text-lg">कोणतेही उत्पादन सापडले नाही</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             {displayProducts.map(product => (
               <div 
                 key={product.id} 
                 onClick={() => setSelectedProduct(product)}
-                className="bg-white rounded-xl shadow-md hover:shadow-xl transition cursor-pointer overflow-hidden"
+                className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden transform hover:scale-[1.02] active:scale-[0.98]"
               >
-                <img 
-                  src={product.image} 
-                  alt={product.name}
-                  className="w-full h-32 object-cover"
-                />
-                <div className="p-4">
-                  <div className="mb-2">
-                    <h3 className="text-base font-bold text-gray-800 mb-1 line-clamp-1">{product.name}</h3>
-                    <p className="text-lg font-bold text-emerald-600">₹{product.price}</p>
+                <div className="relative">
+                  <img 
+                    src={product.image} 
+                    alt={product.name}
+                    className="w-full h-36 object-cover"
+                  />
+                  <div className="absolute top-2 right-2 bg-emerald-600 text-white px-2 py-1 rounded-full text-xs font-bold shadow-lg">
+                    ₹{product.price}
                   </div>
-                  
-                  <p className="text-gray-600 text-xs mb-3 line-clamp-2">{product.description}</p>
+                </div>
+                <div className="p-3">
+                  <h3 className="text-sm font-bold text-gray-800 mb-1 line-clamp-1">{product.name}</h3>
+                  <p className="text-gray-600 text-xs mb-3 line-clamp-2 leading-relaxed">{product.description}</p>
                   
                   <div className="flex space-x-2">
                     <button
@@ -675,7 +676,7 @@ export default function Home() {
                         e.stopPropagation();
                         addToCart(product);
                       }}
-                      className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-3 rounded-lg transition flex items-center justify-center space-x-1 text-sm"
+                      className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white font-bold py-2.5 px-3 rounded-lg transition-all duration-200 flex items-center justify-center space-x-1 text-xs shadow-md"
                     >
                       <Plus className="w-4 h-4" />
                       <span>जोडा</span>
@@ -683,7 +684,7 @@ export default function Home() {
                     <a
                       href="tel:8856983052"
                       onClick={(e) => e.stopPropagation()}
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-lg transition flex items-center justify-center"
+                      className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold py-2.5 px-3 rounded-lg transition-all duration-200 flex items-center justify-center shadow-md"
                     >
                       <Phone className="w-4 h-4" />
                     </a>
