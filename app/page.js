@@ -594,16 +594,16 @@ export default function Home() {
 
       {/* Categories */}
       {!showSearch && !selectedCategory && (
-        <section className="container mx-auto px-4 py-8">
-          <div className="flex space-x-3 overflow-x-auto pb-2">
+        <section className="container mx-auto px-4 py-6">
+          <div className="grid grid-cols-4 gap-2">
             {CATEGORIES.map(category => (
               <button
                 key={category.slug}
                 onClick={() => setSelectedCategory(category.name)}
-                className="flex-shrink-0 bg-white px-6 py-4 rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 flex flex-col items-center space-y-2 min-w-[120px]"
+                className="bg-white p-3 rounded-xl shadow-md hover:shadow-xl transition transform hover:scale-105 active:scale-95 flex flex-col items-center space-y-1"
               >
-                <div className="text-4xl">{category.icon}</div>
-                <h3 className="text-base font-semibold text-gray-800 whitespace-nowrap">{category.name}</h3>
+                <div className="text-3xl">{category.icon}</div>
+                <h3 className="text-xs font-semibold text-gray-800 text-center leading-tight">{category.name}</h3>
               </button>
             ))}
           </div>
