@@ -379,7 +379,7 @@ export default function Home() {
       alert('कृपया प्रथम उत्पादने कार्टमध्ये जोडा!');
       return;
     }
-    const whatsappUrl = `https://wa.me/918856983052?text=${generateWhatsAppMessage()}`;
+    const whatsappUrl = `https://wa.me/917385311748?text=${generateWhatsAppMessage()}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -484,7 +484,7 @@ export default function Home() {
                   <span>कार्टमध्ये जोडा</span>
                 </button>
                 <a
-                  href="tel:8856983052"
+                  href="tel:7385311748"
                   className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl transition flex items-center justify-center"
                 >
                   <Phone className="w-6 h-6" />
@@ -682,7 +682,7 @@ export default function Home() {
                       <span>जोडा</span>
                     </button>
                     <a
-                      href="tel:8856983052"
+                      href="tel:7385311748"
                       onClick={(e) => e.stopPropagation()}
                       className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold py-2.5 px-3 rounded-lg transition-all duration-200 flex items-center justify-center shadow-md"
                     >
@@ -712,7 +712,7 @@ export default function Home() {
               </div>
               <div className="flex items-center space-x-2">
                 <span className="text-red-400">📞</span>
-                <a href="tel:8856983052" className="hover:text-emerald-200">फोन: 8856983052</a>
+                <a href="tel:7385311748" className="hover:text-emerald-200">फोन: 7385311748</a>
               </div>
             </div>
             <div className="border-t border-emerald-600 mt-6 pt-6 text-center text-emerald-200">
