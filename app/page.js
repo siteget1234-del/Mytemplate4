@@ -554,8 +554,19 @@ export default function Home() {
                 <a href={`tel:${shopData?.shop_number}`} className="hover:text-emerald-200">Phone: {shopData?.shop_number || '0000000000'}</a>
               </div>
             </div>
-            <div className="border-t border-emerald-600 mt-6 pt-6 text-center text-emerald-200">
-              <p>© 2025 {shopData?.shop_name || 'Shop Name'}. All rights reserved.</p>
+            <div className="border-t border-emerald-600 mt-6 pt-6">
+              <div className="flex items-center justify-between">
+                <p className="text-emerald-200">© 2025 {shopData?.shop_name || 'Shop Name'}. All rights reserved.</p>
+                {!user && (
+                  <button
+                    onClick={() => router.push('/login')}
+                    className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition flex items-center space-x-2"
+                  >
+                    <Settings className="w-4 h-4" />
+                    <span>Admin Login</span>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </footer>
