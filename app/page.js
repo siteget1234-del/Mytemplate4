@@ -299,8 +299,8 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              {/* Admin Menu Button */}
-              {user && (
+              {/* Admin Login/Menu Button */}
+              {user ? (
                 <div className="relative">
                   <button 
                     onClick={() => setShowUserMenu(!showUserMenu)}
@@ -330,6 +330,14 @@ export default function Home() {
                     </div>
                   )}
                 </div>
+              ) : (
+                <button 
+                  onClick={() => router.push('/login')}
+                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-1 text-sm font-semibold"
+                >
+                  <Settings className="w-4 h-4" />
+                  <span>Admin</span>
+                </button>
               )}
               {/* Cart Button */}
               <button 
