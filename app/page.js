@@ -187,7 +187,7 @@ export default function Home() {
 
   const handleWhatsAppCheckout = () => {
     if (cart.length === 0) {
-      alert('Please add products to cart first!');
+      alert('कृपया प्रथम कार्टमध्ये उत्पादने जोडा!');
       return;
     }
     const whatsappUrl = `https://wa.me/${shopData?.shop_number}?text=${generateWhatsAppMessage()}`;
