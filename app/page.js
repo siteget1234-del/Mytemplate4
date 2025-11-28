@@ -581,7 +581,7 @@ export default function Home() {
                       className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white font-bold py-2.5 px-3 rounded-lg transition-all duration-200 flex items-center justify-center space-x-1 text-xs shadow-md"
                     >
                       <Plus className="w-4 h-4" />
-                      <span>Add</span>
+                      <span>जोडा</span>
                     </button>
                     <a
                       href={`tel:${shopData?.shop_number}`}
