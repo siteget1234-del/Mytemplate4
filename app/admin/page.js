@@ -797,58 +797,31 @@ export default function AdminDashboard() {
               </h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Banner Title *</label>
-                  <input
-                    type="text"
-                    value={bannerForm.title}
-                    onChange={(e) => setBannerForm(prev => ({ ...prev, title: e.target.value }))}
-                    placeholder="Enter banner title"
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Banner Order/Sequence *</label>
+                  <select
+                    value={bannerForm.order}
+                    onChange={(e) => setBannerForm(prev => ({ ...prev, order: e.target.value }))}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  />
+                  >
+                    {[1, 2, 3, 4, 5].map(num => {
+                      // Get existing banner orders except current editing banner
+                      const existingOrders = shopData.banners
+                        .filter(b => !editingBanner || b.id !== bannerForm.id)
+                        .map(b => b.order);
+                      
+                      // Only show available sequences
+                      if (!existingOrders.includes(num)) {
+                        return <option key={num} value={num}>Banner {num}</option>;
+                      }
+                      return null;
+                    })}
+                    {editingBanner && (
+                      <option value={bannerForm.order}>Banner {bannerForm.order} (current)</option>
+                    )}
+                  </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Banner Subtitle *</label>
-                  <input
-                    type="text"
-                    value={bannerForm.subtitle}
-                    onChange={(e) => setBannerForm(prev => ({ ...prev, subtitle: e.target.value }))}
-                    placeholder="Enter banner subtitle"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Banner Order/Sequence *</label>
-                    <select
-                      value={bannerForm.order}
-                      onChange={(e) => setBannerForm(prev => ({ ...prev, order: e.target.value }))}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                    >
-                      <option value="1">1st Banner</option>
-                      <option value="2">2nd Banner</option>
-                      <option value="3">3rd Banner</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Background Gradient</label>
-                    <select
-                      value={bannerForm.bg}
-                      onChange={(e) => setBannerForm(prev => ({ ...prev, bg: e.target.value }))}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                    >
-                      <option value="from-emerald-600 to-emerald-800">Emerald</option>
-                      <option value="from-green-600 to-green-800">Green</option>
-                      <option value="from-teal-600 to-teal-800">Teal</option>
-                      <option value="from-blue-600 to-blue-800">Blue</option>
-                      <option value="from-purple-600 to-purple-800">Purple</option>
-                      <option value="from-pink-600 to-pink-800">Pink</option>
-                      <option value="from-red-600 to-red-800">Red</option>
-                      <option value="from-orange-600 to-orange-800">Orange</option>
-                    </select>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Banner Image (Optional)</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Banner Image * (Max 200KB)</label>
                   <div className="space-y-3">
                     <input
                       type="file"
@@ -863,7 +836,7 @@ export default function AdminDashboard() {
                       </div>
                     )}
                     {bannerForm.image && (
-                      <div className="relative w-full h-32">
+                      <div className="relative w-full h-48">
                         <img src={bannerForm.image} alt="Banner Preview" className="w-full h-full object-cover rounded-lg" />
                       </div>
                     )}
@@ -882,23 +855,23 @@ export default function AdminDashboard() {
                 {/* Preview */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Preview</label>
-                  <div className={`relative h-48 bg-gradient-to-br ${bannerForm.bg} text-white rounded-lg flex flex-col items-center justify-center overflow-hidden`}>
-                    {bannerForm.image && (
-                      <img src={bannerForm.image} alt="Banner" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+                  <div className="relative h-48 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                    {bannerForm.image ? (
+                      <img src={bannerForm.image} alt="Banner Preview" className="w-full h-full object-cover" />
+                    ) : (
+                      <p className="text-gray-400">No image uploaded</p>
                     )}
-                    <div className="relative z-10 text-center px-4">
-                      <h3 className="text-2xl md:text-3xl font-bold mb-2">{bannerForm.title || 'Banner Title'}</h3>
-                      <p className="text-white/90 text-lg">{bannerForm.subtitle || 'Banner Subtitle'}</p>
-                      {bannerForm.link && (
-                        <p className="text-xs mt-2 text-white/70">🔗 Links to: {bannerForm.link}</p>
-                      )}
-                    </div>
+                    {bannerForm.link && (
+                      <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
+                        🔗 Links to: {bannerForm.link.length > 30 ? bannerForm.link.substring(0, 30) + '...' : bannerForm.link}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex space-x-3">
                   <button
                     onClick={handleAddBanner}
-                    disabled={saving}
+                    disabled={saving || uploadingBannerImage}
                     className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg transition flex items-center justify-center space-x-2 disabled:opacity-50"
                   >
                     <Plus className="w-5 h-5" />
@@ -907,7 +880,7 @@ export default function AdminDashboard() {
                   {editingBanner && (
                     <button
                       onClick={() => {
-                        setBannerForm({ id: '', title: '', subtitle: '', bg: 'from-emerald-600 to-emerald-800', image: '', link: '', order: 1 });
+                        setBannerForm({ id: '', image: '', link: '', order: 1 });
                         setEditingBanner(false);
                       }}
                       className="px-6 bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-3 rounded-lg transition"
