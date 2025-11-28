@@ -8,10 +8,10 @@ import { supabase, getCurrentUser } from '@/lib/supabase';
 
 // Predefined Categories - Always show these 4
 const PREDEFINED_CATEGORIES = [
-  { name: 'Seeds', icon: '🌱', slug: 'seeds' },
-  { name: 'Nutrition', icon: '🌿', slug: 'nutrition' },
-  { name: 'Protection', icon: '🛡️', slug: 'protection' },
-  { name: 'Hardware', icon: '🔧', slug: 'hardware' }
+  { name: 'बीज', icon: '🌱', slug: 'seeds' },
+  { name: 'पोषण', icon: '🌿', slug: 'nutrition' },
+  { name: 'संरक्षण', icon: '🛡️', slug: 'protection' },
+  { name: 'हार्डवेअर', icon: '🔧', slug: 'hardware' }
 ];
 
 export default function Home() {
