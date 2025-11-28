@@ -348,8 +348,14 @@ export default function AdminDashboard() {
   };
 
   const handleAddBanner = async () => {
-    if (!bannerForm.title || !bannerForm.subtitle) {
-      showMessage('error', 'Please fill all required banner fields');
+    if (!bannerForm.image) {
+      showMessage('error', 'Please upload a banner image');
+      return;
+    }
+
+    // Check banner limit - max 5 banners
+    if (!editingBanner && shopData.banners.length >= 5) {
+      showMessage('error', 'Maximum 5 banners allowed');
       return;
     }
 
@@ -357,10 +363,7 @@ export default function AdminDashboard() {
     try {
       const newBanner = {
         id: editingBanner ? bannerForm.id : uuidv4(),
-        title: bannerForm.title,
-        subtitle: bannerForm.subtitle,
-        bg: bannerForm.bg,
-        image: bannerForm.image || '',
+        image: bannerForm.image,
         link: bannerForm.link || '',
         order: parseInt(bannerForm.order) || 1
       };
@@ -385,7 +388,7 @@ export default function AdminDashboard() {
       if (error) throw error;
 
       setShopData(prev => ({ ...prev, banners: updatedBanners }));
-      setBannerForm({ id: '', title: '', subtitle: '', bg: 'from-emerald-600 to-emerald-800', image: '', link: '', order: 1 });
+      setBannerForm({ id: '', image: '', link: '', order: 1 });
       setEditingBanner(false);
       showMessage('success', editingBanner ? 'Banner updated!' : 'Banner added successfully!');
     } catch (error) {
