@@ -499,30 +499,39 @@ export default function Home() {
       <section className="container mx-auto px-4 py-8">
         <div className="mb-6">
           {showSearch && searchQuery ? (
-            <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => {
+                  if (window.history.state?.searchOpen) {
+                    window.history.back();
+                  } else {
+                    setShowSearch(false);
+                    setSearchQuery('');
+                  }
+                }}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-all duration-200 active:scale-95"
+              >
+                <ChevronLeft className="w-6 h-6 text-gray-700" />
+              </button>
               <h2 className="text-2xl font-bold text-gray-800">
                 Search Results ({searchResults.length})
               </h2>
-              <button
-                onClick={() => {
-                  setShowSearch(false);
-                  setSearchQuery('');
-                }}
-                className="text-emerald-600 hover:text-emerald-700 font-semibold"
-              >
-                View All Products
-              </button>
             </div>
           ) : selectedCategory ? (
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-800">{selectedCategory}</h2>
+            <div className="flex items-center space-x-2">
               <button
-                onClick={() => setSelectedCategory(null)}
-                className="text-emerald-600 hover:text-emerald-700 font-semibold flex items-center space-x-1"
+                onClick={() => {
+                  if (window.history.state?.categoryOpen) {
+                    window.history.back();
+                  } else {
+                    setSelectedCategory(null);
+                  }
+                }}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-all duration-200 active:scale-95"
               >
-                <ChevronLeft className="w-5 h-5" />
-                <span>Back</span>
+                <ChevronLeft className="w-6 h-6 text-gray-700" />
               </button>
+              <h2 className="text-2xl font-bold text-gray-800">{selectedCategory}</h2>
             </div>
           ) : (
             <h2 className="text-2xl font-bold text-gray-800">Featured Products</h2>
