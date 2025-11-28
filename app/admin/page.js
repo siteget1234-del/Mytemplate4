@@ -645,20 +645,20 @@ export default function AdminDashboard() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {PREDEFINED_CATEGORIES.map(cat => (
                       <button
                         key={cat.slug}
                         type="button"
                         onClick={() => setProductForm(prev => ({ ...prev, category: cat.name }))}
-                        className={`px-4 py-3 rounded-lg border-2 transition flex flex-col items-center space-y-1 ${
+                        className={`px-2 py-2 rounded-md border-2 transition flex flex-col items-center space-y-0.5 ${
                           productForm.category === cat.name
                             ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
                             : 'border-gray-300 hover:border-emerald-400'
                         }`}
                       >
-                        <span className="text-2xl">{cat.icon}</span>
-                        <span className="text-sm font-semibold">{cat.name}</span>
+                        <span className="text-xl">{cat.icon}</span>
+                        <span className="text-xs font-semibold">{cat.name}</span>
                       </button>
                     ))}
                   </div>
