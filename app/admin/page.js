@@ -1001,31 +1001,15 @@ export default function AdminDashboard() {
                   </p>
                 </div>
                 {pendingProducts.length > 0 && (
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => {
-                        if (confirm('Are you sure you want to discard all pending products?')) {
-                          clearPendingProducts();
-                          showMessage('success', 'All pending products discarded');
-                        }
-                      }}
-                      disabled={saving}
-                      className="bg-gray-500 hover:bg-gray-600 text-white font-bold px-4 py-2 rounded-lg transition flex items-center space-x-2 disabled:opacity-50"
-                      data-testid="discard-all-btn"
-                    >
-                      <X className="w-5 h-5" />
-                      <span>Discard All</span>
-                    </button>
-                    <button
-                      onClick={handleBulkSaveProducts}
-                      disabled={saving}
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-lg transition flex items-center space-x-2 disabled:opacity-50"
-                      data-testid="save-all-btn"
-                    >
-                      <Save className="w-5 h-5" />
-                      <span>{saving ? 'Saving...' : `Save All (${pendingProducts.length})`}</span>
-                    </button>
-                  </div>
+                  <button
+                    onClick={handleBulkSaveProducts}
+                    disabled={saving}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-lg transition flex items-center space-x-2 disabled:opacity-50"
+                    data-testid="save-all-btn"
+                  >
+                    <Save className="w-5 h-5" />
+                    <span>{saving ? 'Saving...' : `Save All (${pendingProducts.length})`}</span>
+                  </button>
                 )}
               </div>
               
