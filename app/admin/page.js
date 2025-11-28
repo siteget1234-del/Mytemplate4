@@ -748,22 +748,26 @@ export default function AdminDashboard() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {shopData.products.map(product => (
-                    <div key={product.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition">
-                      <img 
-                        src={product.image || 'https://via.placeholder.com/200x150?text=No+Image'} 
-                        alt={product.name}
-                        className="w-full h-40 object-cover rounded-lg mb-3"
-                      />
-                      <h4 className="font-bold text-gray-800 mb-1">{product.name}</h4>
-                      <p className="text-emerald-600 font-bold text-lg mb-2">₹{product.price}</p>
-                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">{product.description}</p>
-                      <div className="flex items-center justify-between mb-3">
-                        <p className="text-xs text-gray-500">Category: {product.category}</p>
-                        {product.featured && (
-                          <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-semibold">⭐ Featured</span>
-                        )}
+                    <div key={product.id} className="border border-gray-200 rounded-lg p-3 hover:shadow-lg transition relative">
+                      <div className="flex gap-3">
+                        <div className="flex-1">
+                          <h4 className="font-bold text-gray-800 mb-1 pr-20">{product.name}</h4>
+                          <p className="text-emerald-600 font-bold text-lg mb-1">₹{product.price}</p>
+                          <p className="text-sm text-gray-600 mb-2 line-clamp-2">{product.description}</p>
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="text-xs text-gray-500">Category: {product.category}</p>
+                            {product.featured && (
+                              <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-semibold">⭐ Featured</span>
+                            )}
+                          </div>
+                        </div>
+                        <img 
+                          src={product.image || 'https://via.placeholder.com/200x150?text=No+Image'} 
+                          alt={product.name}
+                          className="absolute top-3 right-3 w-16 h-16 object-cover rounded-lg"
+                        />
                       </div>
-                      <div className="flex space-x-2">
+                      <div className="flex space-x-2 mt-2">
                         <button
                           onClick={() => handleEditProduct(product)}
                           className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition flex items-center justify-center space-x-1"
