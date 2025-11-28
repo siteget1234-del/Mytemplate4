@@ -695,7 +695,7 @@ export default function AdminDashboard() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Product Image</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Product Image (Max 100KB)</label>
                   <div className="space-y-3">
                     <input
                       type="file"
