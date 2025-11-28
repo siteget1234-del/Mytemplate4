@@ -962,9 +962,10 @@ export default function AdminDashboard() {
                     onClick={handleAddProduct}
                     disabled={saving || uploadingImage}
                     className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg transition flex items-center justify-center space-x-2 disabled:opacity-50"
+                    data-testid="add-product-btn"
                   >
                     <Plus className="w-5 h-5" />
-                    <span>{saving ? 'Saving...' : editingProduct ? 'Update Product' : 'Add Product'}</span>
+                    <span>{saving ? 'Adding to Queue...' : editingProduct ? 'Update Product (Queue)' : 'Add to Queue'}</span>
                   </button>
                   {editingProduct && (
                     <button
@@ -978,6 +979,13 @@ export default function AdminDashboard() {
                     </button>
                   )}
                 </div>
+                {!editingProduct && pendingProducts.length > 0 && (
+                  <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <p className="text-sm text-blue-800">
+                      💡 <strong>Tip:</strong> You have {pendingProducts.length} pending product(s). Click "Save All" below to commit them to the database.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 
