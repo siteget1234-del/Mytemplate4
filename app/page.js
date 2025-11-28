@@ -32,6 +32,25 @@ export default function Home() {
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Handle history API for modal back button
+  useEffect(() => {
+    if (selectedProduct) {
+      // Push a new state when modal opens
+      window.history.pushState({ modalOpen: true }, '');
+      
+      const handlePopState = (event) => {
+        // Close modal when back button is pressed
+        setSelectedProduct(null);
+      };
+      
+      window.addEventListener('popstate', handlePopState);
+      
+      return () => {
+        window.removeEventListener('popstate', handlePopState);
+      };
+    }
+  }, [selectedProduct]);
+
   // Check authentication state
   useEffect(() => {
     checkUser();
