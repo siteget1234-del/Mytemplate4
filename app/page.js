@@ -386,34 +386,20 @@ export default function Home() {
 
           {/* Search Bar */}
           <div className="mt-3">
-            <div className="relative flex items-center space-x-2">
-              {showSearch && (
-                <button
-                  onClick={() => {
-                    setShowSearch(false);
-                    setSearchQuery('');
-                    setSelectedCategory(null);
-                  }}
-                  className="flex items-center justify-center bg-white rounded-xl p-2.5 hover:bg-gray-100 transition-all duration-200 active:scale-95 shadow-md"
-                >
-                  <ChevronLeft className="w-5 h-5 text-gray-700" />
-                </button>
-              )}
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Search Products..."
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setShowSearch(true);
-                    setSelectedCategory(null);
-                  }}
-                  onFocus={() => setShowSearch(true)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-300 shadow-md transition-all duration-200"
-                />
-              </div>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search Products..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setShowSearch(true);
+                  setSelectedCategory(null);
+                }}
+                onFocus={() => setShowSearch(true)}
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-300 shadow-md transition-all duration-200"
+              />
             </div>
           </div>
         </div>
