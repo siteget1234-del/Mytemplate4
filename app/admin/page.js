@@ -23,6 +23,9 @@ export default function AdminDashboard() {
     banners: []
   });
 
+  // Pending Products Queue (from Local Storage)
+  const [pendingProducts, setPendingProducts] = useState([]);
+
   // Predefined Categories
   const PREDEFINED_CATEGORIES = [
     { name: 'Seeds', icon: '🌱', slug: 'seeds' },
