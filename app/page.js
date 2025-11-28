@@ -32,15 +32,26 @@ export default function Home() {
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Handle history API for modal back button
+  // Handle history API for all navigation states
   useEffect(() => {
-    if (selectedProduct) {
-      // Push a new state when modal opens
-      window.history.pushState({ modalOpen: true }, '');
+    if (selectedProduct || showSearch || selectedCategory) {
+      // Push a new state when any modal/view opens
+      window.history.pushState({ 
+        modalOpen: !!selectedProduct,
+        searchOpen: showSearch,
+        categoryOpen: !!selectedCategory
+      }, '');
       
       const handlePopState = (event) => {
-        // Close modal when back button is pressed
-        setSelectedProduct(null);
+        // Close modal/view when back button is pressed
+        if (selectedProduct) {
+          setSelectedProduct(null);
+        } else if (selectedCategory) {
+          setSelectedCategory(null);
+        } else if (showSearch) {
+          setShowSearch(false);
+          setSearchQuery('');
+        }
       };
       
       window.addEventListener('popstate', handlePopState);
@@ -49,7 +60,7 @@ export default function Home() {
         window.removeEventListener('popstate', handlePopState);
       };
     }
-  }, [selectedProduct]);
+  }, [selectedProduct, showSearch, selectedCategory]);
 
   // Check authentication state
   useEffect(() => {
