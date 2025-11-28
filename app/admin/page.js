@@ -327,6 +327,14 @@ export default function AdminDashboard() {
     const file = e.target.files[0];
     if (!file) return;
 
+    // Validate file size - max 200KB for banners
+    const maxSize = 200 * 1024; // 200KB in bytes
+    if (file.size > maxSize) {
+      showMessage('error', 'Banner image must be less than 200KB');
+      e.target.value = ''; // Clear the input
+      return;
+    }
+
     setUploadingBannerImage(true);
     try {
       const imageUrl = await uploadToCloudinary(file);
