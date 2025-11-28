@@ -60,7 +60,64 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     checkAuth();
+    loadPendingProducts();
   }, []);
+
+  // Local Storage Management Functions
+  const PENDING_PRODUCTS_KEY = 'admin_pending_products';
+
+  const loadPendingProducts = () => {
+    try {
+      const stored = localStorage.getItem(PENDING_PRODUCTS_KEY);
+      if (stored) {
+        setPendingProducts(JSON.parse(stored));
+      }
+    } catch (error) {
+      console.error('Error loading pending products:', error);
+    }
+  };
+
+  const savePendingProductToStorage = (product) => {
+    try {
+      const stored = localStorage.getItem(PENDING_PRODUCTS_KEY);
+      const pending = stored ? JSON.parse(stored) : [];
+      
+      // Check if editing an existing pending product
+      const existingIndex = pending.findIndex(p => p.id === product.id);
+      if (existingIndex !== -1) {
+        pending[existingIndex] = product;
+      } else {
+        pending.push(product);
+      }
+      
+      localStorage.setItem(PENDING_PRODUCTS_KEY, JSON.stringify(pending));
+      setPendingProducts(pending);
+    } catch (error) {
+      console.error('Error saving to local storage:', error);
+      throw error;
+    }
+  };
+
+  const removePendingProductFromStorage = (productId) => {
+    try {
+      const stored = localStorage.getItem(PENDING_PRODUCTS_KEY);
+      const pending = stored ? JSON.parse(stored) : [];
+      const filtered = pending.filter(p => p.id !== productId);
+      localStorage.setItem(PENDING_PRODUCTS_KEY, JSON.stringify(filtered));
+      setPendingProducts(filtered);
+    } catch (error) {
+      console.error('Error removing from local storage:', error);
+    }
+  };
+
+  const clearPendingProducts = () => {
+    try {
+      localStorage.removeItem(PENDING_PRODUCTS_KEY);
+      setPendingProducts([]);
+    } catch (error) {
+      console.error('Error clearing local storage:', error);
+    }
+  };
 
   const checkAuth = async () => {
     try {
