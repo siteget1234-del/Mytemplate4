@@ -243,6 +243,12 @@ export default function AdminDashboard() {
       return;
     }
 
+    // Check product limit - max 100 products
+    if (!editingProduct && shopData.products.length >= 100) {
+      showMessage('error', 'Maximum 100 products allowed');
+      return;
+    }
+
     setSaving(true);
     try {
       // Generate search keywords
