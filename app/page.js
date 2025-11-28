@@ -487,7 +487,7 @@ export default function Home() {
                 <div className="text-3xl">{category.icon}</div>
                 <h3 className="text-xs font-semibold text-gray-800 text-center leading-tight">{category.name}</h3>
                 <span className={`text-[10px] font-bold ${category.count > 0 ? 'text-emerald-600' : 'text-gray-400'}`}>
-                  {category.count > 0 ? `${category.count} Products` : '0 Products'}
+                  {category.count > 0 ? `${category.count} उत्पादने` : '0 उत्पादने'}
                 </span>
               </button>
             ))}
