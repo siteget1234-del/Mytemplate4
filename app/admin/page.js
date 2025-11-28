@@ -852,22 +852,6 @@ export default function AdminDashboard() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   />
                 </div>
-                {/* Preview */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Preview</label>
-                  <div className="relative h-48 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-                    {bannerForm.image ? (
-                      <img src={bannerForm.image} alt="Banner Preview" className="w-full h-full object-cover" />
-                    ) : (
-                      <p className="text-gray-400">No image uploaded</p>
-                    )}
-                    {bannerForm.link && (
-                      <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
-                        🔗 Links to: {bannerForm.link.length > 30 ? bannerForm.link.substring(0, 30) + '...' : bannerForm.link}
-                      </div>
-                    )}
-                  </div>
-                </div>
                 <div className="flex space-x-3">
                   <button
                     onClick={handleAddBanner}
