@@ -706,11 +706,11 @@ export default function Home() {
               <div className="border-t border-gray-200 bg-white p-5 space-y-4">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-gray-600">
-                    <span>Total Items:</span>
+                    <span>एकूण वस्तू:</span>
                     <span className="font-semibold">{cartItemCount}</span>
                   </div>
                   <div className="flex items-center justify-between text-2xl font-bold">
-                    <span className="text-gray-800">Total:</span>
+                    <span className="text-gray-800">एकूण:</span>
                     <span className="text-emerald-600">₹{totalAmount}</span>
                   </div>
                 </div>
@@ -718,10 +718,10 @@ export default function Home() {
                   onClick={handleWhatsAppCheckout}
                   className="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-bold py-4 rounded-xl transition flex items-center justify-center space-x-2 shadow-lg"
                 >
-                  <span className="text-lg">Order via WhatsApp</span>
+                  <span className="text-lg">व्हाट्सअ‍ॅपद्वारे ऑर्डर करा</span>
                   <span className="text-xl">💬</span>
                 </button>
-                <p className="text-center text-xs text-gray-500">We will contact you shortly</p>
+                <p className="text-center text-xs text-gray-500">आम्ही लवकरच तुमच्याशी संपर्क साधू</p>
               </div>
             )}
           </div>
