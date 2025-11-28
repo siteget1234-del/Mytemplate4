@@ -245,7 +245,7 @@ export default function Home() {
                 className="flex items-center space-x-2 hover:bg-emerald-600 px-3 py-2 rounded-lg transition"
               >
                 <ChevronLeft className="w-5 h-5" />
-                <span>Back</span>
+                <span>परत</span>
               </button>
               <button 
                 onClick={() => setShowCart(true)}
