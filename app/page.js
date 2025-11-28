@@ -214,6 +214,15 @@ export default function Home() {
 
   // Product Detail Modal
   if (selectedProduct) {
+    const handleCloseModal = () => {
+      // Remove the history state if it exists
+      if (window.history.state?.modalOpen) {
+        window.history.back();
+      } else {
+        setSelectedProduct(null);
+      }
+    };
+
     return (
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
@@ -221,7 +230,7 @@ export default function Home() {
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <button 
-                onClick={() => setSelectedProduct(null)}
+                onClick={handleCloseModal}
                 className="flex items-center space-x-2 hover:bg-emerald-600 px-3 py-2 rounded-lg transition"
               >
                 <ChevronLeft className="w-5 h-5" />
