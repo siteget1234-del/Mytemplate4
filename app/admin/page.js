@@ -48,9 +48,6 @@ export default function AdminDashboard() {
   // Banner Form
   const [bannerForm, setBannerForm] = useState({
     id: '',
-    title: '',
-    subtitle: '',
-    bg: 'from-emerald-600 to-emerald-800',
     image: '',
     link: '',
     order: 1
