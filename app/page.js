@@ -540,13 +540,13 @@ export default function Home() {
 
         {displayProducts.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No products available yet</p>
+            <p className="text-gray-500 text-lg">अद्याप उत्पादने उपलब्ध नाहीत</p>
             {user && (
               <button
                 onClick={() => router.push('/admin')}
                 className="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-semibold"
               >
-                Add Products from Admin Panel
+                अ‍ॅडमिन पॅनेलमधून उत्पादने जोडा
               </button>
             )}
           </div>
