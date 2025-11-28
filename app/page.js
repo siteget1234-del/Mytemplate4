@@ -380,14 +380,14 @@ export default function Home() {
           <div className="relative h-56 md:h-72">
             {banners.map((banner, index) => {
               const BannerContent = () => (
-                <div className={`relative h-full bg-gradient-to-br ${banner.bg || 'from-emerald-600 to-emerald-800'} text-white flex flex-col items-center justify-center px-4 overflow-hidden`}>
-                  {banner.image && (
-                    <img src={banner.image} alt={banner.title} className="absolute inset-0 w-full h-full object-cover opacity-40" />
+                <div className="relative h-full flex items-center justify-center overflow-hidden bg-gray-200">
+                  {banner.image ? (
+                    <img src={banner.image} alt={`Banner ${banner.order || index + 1}`} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="text-gray-400 text-center">
+                      <p className="text-lg">No banner image</p>
+                    </div>
                   )}
-                  <div className="relative z-10 text-center">
-                    <h2 className="text-3xl md:text-5xl font-bold mb-3">{banner.title}</h2>
-                    <p className="text-lg md:text-xl text-white/90">{banner.subtitle}</p>
-                  </div>
                 </div>
               );
 
