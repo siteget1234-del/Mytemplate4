@@ -79,12 +79,7 @@ export default function Home() {
         shop_address: 'Shop Address'
       });
       setProducts([]);
-      setBanners([{
-        id: 1,
-        title: 'Welcome!',
-        subtitle: 'Start adding products from admin panel',
-        bg: 'from-emerald-600 to-emerald-800'
-      }]);
+      setBanners([]);
     } finally {
       setLoading(false);
     }
