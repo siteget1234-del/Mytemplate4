@@ -514,7 +514,7 @@ export default function Home() {
                 <ChevronLeft className="w-6 h-6 text-gray-700" />
               </button>
               <h2 className="text-2xl font-bold text-gray-800">
-                Search Results ({searchResults.length})
+                शोध परिणाम ({searchResults.length})
               </h2>
             </div>
           ) : selectedCategory ? (
@@ -534,7 +534,7 @@ export default function Home() {
               <h2 className="text-2xl font-bold text-gray-800">{selectedCategory}</h2>
             </div>
           ) : (
-            <h2 className="text-2xl font-bold text-gray-800">Featured Products</h2>
+            <h2 className="text-2xl font-bold text-gray-800">खास उत्पादने</h2>
           )}
         </div>
 
