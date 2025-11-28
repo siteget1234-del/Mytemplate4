@@ -6,11 +6,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase, getCurrentUser } from '@/lib/supabase';
 
-const PLACEHOLDER_CATEGORIES = [
-  { name: 'Category 1', icon: '🌱', slug: 'category1' },
-  { name: 'Category 2', icon: '🛡️', slug: 'category2' },
-  { name: 'Category 3', icon: '🔧', slug: 'category3' },
-  { name: 'Category 4', icon: '🌿', slug: 'category4' }
+// Predefined Categories - Always show these 4
+const PREDEFINED_CATEGORIES = [
+  { name: 'Seeds', icon: '🌱', slug: 'seeds' },
+  { name: 'Nutrition', icon: '🌿', slug: 'nutrition' },
+  { name: 'Protection', icon: '🛡️', slug: 'protection' },
+  { name: 'Hardware', icon: '🔧', slug: 'hardware' }
 ];
 
 export default function Home() {
@@ -99,7 +100,7 @@ export default function Home() {
     }
   }, [banners]);
 
-  // Search functionality
+  // Enhanced search functionality with keyword mapping
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
     
@@ -110,7 +111,12 @@ export default function Home() {
       const matchesDescription = product.description?.toLowerCase().includes(query);
       const matchesCategory = product.category?.toLowerCase().includes(query);
       
-      return matchesName || matchesDescription || matchesCategory;
+      // Search in hidden keywords
+      const matchesKeywords = product.searchKeywords?.some(keyword => 
+        keyword.toLowerCase().includes(query) || query.includes(keyword.toLowerCase())
+      );
+      
+      return matchesName || matchesDescription || matchesCategory || matchesKeywords;
     });
   }, [searchQuery, products]);
 
@@ -169,7 +175,9 @@ export default function Home() {
     setShowUserMenu(false);
   };
 
-  const featuredProducts = products.slice(0, 4);
+  // Featured products - only those marked as featured
+  const featuredProducts = products.filter(p => p.featured === true);
+  
   const categoryProducts = selectedCategory 
     ? products.filter(p => p.category === selectedCategory)
     : null;
@@ -182,16 +190,12 @@ export default function Home() {
 
   const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  // Get unique categories from products
-  const categories = useMemo(() => {
-    const uniqueCategories = [...new Set(products.map(p => p.category).filter(Boolean))];
-    return uniqueCategories.length > 0 
-      ? uniqueCategories.map((cat, idx) => ({ 
-          name: cat, 
-          icon: ['🌱', '🛡️', '🔧', '🌿'][idx % 4], 
-          slug: cat.toLowerCase() 
-        }))
-      : PLACEHOLDER_CATEGORIES;
+  // Always show predefined categories with product counts
+  const categoriesWithCounts = useMemo(() => {
+    return PREDEFINED_CATEGORIES.map(cat => ({
+      ...cat,
+      count: products.filter(p => p.category === cat.name).length
+    }));
   }, [products]);
 
   // Product Detail Modal
@@ -379,19 +383,36 @@ export default function Home() {
       {!showSearch && !selectedCategory && banners.length > 0 && (
         <section className="relative overflow-hidden bg-emerald-700">
           <div className="relative h-56 md:h-72">
-            {banners.map((banner, index) => (
-              <div
-                key={banner.id}
-                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                  index === currentBanner ? 'opacity-100 z-10' : 'opacity-0 z-0'
-                }`}
-              >
-                <div className={`h-full bg-gradient-to-br ${banner.bg || 'from-emerald-600 to-emerald-800'} text-white flex flex-col items-center justify-center px-4`}>
-                  <h2 className="text-3xl md:text-5xl font-bold mb-3 text-center">{banner.title}</h2>
-                  <p className="text-lg md:text-xl text-white/90 text-center">{banner.subtitle}</p>
+            {banners.map((banner, index) => {
+              const BannerContent = () => (
+                <div className={`relative h-full bg-gradient-to-br ${banner.bg || 'from-emerald-600 to-emerald-800'} text-white flex flex-col items-center justify-center px-4 overflow-hidden`}>
+                  {banner.image && (
+                    <img src={banner.image} alt={banner.title} className="absolute inset-0 w-full h-full object-cover opacity-40" />
+                  )}
+                  <div className="relative z-10 text-center">
+                    <h2 className="text-3xl md:text-5xl font-bold mb-3">{banner.title}</h2>
+                    <p className="text-lg md:text-xl text-white/90">{banner.subtitle}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+
+              return (
+                <div
+                  key={banner.id}
+                  className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                    index === currentBanner ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                  }`}
+                >
+                  {banner.link ? (
+                    <a href={banner.link} target="_blank" rel="noopener noreferrer" className="block h-full">
+                      <BannerContent />
+                    </a>
+                  ) : (
+                    <BannerContent />
+                  )}
+                </div>
+              );
+            })}
           </div>
           
           {banners.length > 1 && (
@@ -427,18 +448,21 @@ export default function Home() {
         </section>
       )}
 
-      {/* Categories */}
-      {!showSearch && !selectedCategory && categories.length > 0 && (
+      {/* Categories - Always show all 4 */}
+      {!showSearch && !selectedCategory && (
         <section className="container mx-auto px-4 py-6">
           <div className="grid grid-cols-4 gap-2">
-            {categories.map(category => (
+            {categoriesWithCounts.map(category => (
               <button
                 key={category.slug}
                 onClick={() => setSelectedCategory(category.name)}
-                className="bg-white p-3 rounded-xl shadow-md hover:shadow-xl transition transform hover:scale-105 active:scale-95 flex flex-col items-center space-y-1"
+                className="bg-white p-3 rounded-xl shadow-md hover:shadow-xl transition transform hover:scale-105 active:scale-95 flex flex-col items-center space-y-1 relative"
               >
                 <div className="text-3xl">{category.icon}</div>
                 <h3 className="text-xs font-semibold text-gray-800 text-center leading-tight">{category.name}</h3>
+                <span className={`text-[10px] font-bold ${category.count > 0 ? 'text-emerald-600' : 'text-gray-400'}`}>
+                  {category.count > 0 ? `${category.count} Products` : '0 Products'}
+                </span>
               </button>
             ))}
           </div>

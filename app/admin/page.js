@@ -23,6 +23,14 @@ export default function AdminDashboard() {
     banners: []
   });
 
+  // Predefined Categories
+  const PREDEFINED_CATEGORIES = [
+    { name: 'Seeds', icon: '🌱', slug: 'seeds' },
+    { name: 'Nutrition', icon: '🌿', slug: 'nutrition' },
+    { name: 'Protection', icon: '🛡️', slug: 'protection' },
+    { name: 'Hardware', icon: '🔧', slug: 'hardware' }
+  ];
+
   // Product Form
   const [productForm, setProductForm] = useState({
     id: '',
@@ -30,7 +38,9 @@ export default function AdminDashboard() {
     price: '',
     description: '',
     category: '',
-    image: ''
+    image: '',
+    featured: false,
+    searchKeywords: []
   });
   const [editingProduct, setEditingProduct] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -40,9 +50,13 @@ export default function AdminDashboard() {
     id: '',
     title: '',
     subtitle: '',
-    bg: 'from-emerald-600 to-emerald-800'
+    bg: 'from-emerald-600 to-emerald-800',
+    image: '',
+    link: '',
+    order: 1
   });
   const [editingBanner, setEditingBanner] = useState(false);
+  const [uploadingBannerImage, setUploadingBannerImage] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -178,6 +192,46 @@ export default function AdminDashboard() {
     }
   };
 
+  // Generate search keywords for product
+  const generateSearchKeywords = (productName) => {
+    const keywords = [];
+    
+    // Original name
+    keywords.push(productName);
+    
+    // Lowercase
+    keywords.push(productName.toLowerCase());
+    
+    // Split words
+    const words = productName.toLowerCase().split(' ');
+    keywords.push(...words);
+    
+    // Common transliterations/phonetic mappings
+    const transliterationMap = {
+      'urea': ['युरिया', 'yuriya'],
+      'npk': ['एनपीके', 'enpike'],
+      'dap': ['डीएपी', 'diep'],
+      'potash': ['पोटॅश', 'potash'],
+      'zinc': ['झिंक', 'jink'],
+      'tomato': ['टोमॅटो', 'tamatar', 'tometo'],
+      'chilli': ['मिरची', 'mirchi'],
+      'onion': ['कांदा', 'kanda', 'pyaj'],
+      'seeds': ['बियाणे', 'bijane'],
+      'fertilizer': ['खत', 'khate'],
+      'pesticide': ['कीटकनाशक', 'keetaknashak']
+    };
+    
+    // Add transliterations
+    Object.keys(transliterationMap).forEach(key => {
+      if (productName.toLowerCase().includes(key)) {
+        keywords.push(...transliterationMap[key]);
+      }
+    });
+    
+    // Remove duplicates and return
+    return [...new Set(keywords)];
+  };
+
   const handleAddProduct = async () => {
     if (!productForm.name || !productForm.price || !productForm.category) {
       showMessage('error', 'Please fill all required product fields');
@@ -186,13 +240,18 @@ export default function AdminDashboard() {
 
     setSaving(true);
     try {
+      // Generate search keywords
+      const searchKeywords = generateSearchKeywords(productForm.name);
+      
       const newProduct = {
         id: editingProduct ? productForm.id : uuidv4(),
         name: productForm.name,
         price: parseFloat(productForm.price),
         description: productForm.description,
         category: productForm.category,
-        image: productForm.image
+        image: productForm.image,
+        featured: productForm.featured || false,
+        searchKeywords: searchKeywords
       };
 
       let updatedProducts;
@@ -212,7 +271,7 @@ export default function AdminDashboard() {
       if (error) throw error;
 
       setShopData(prev => ({ ...prev, products: updatedProducts }));
-      setProductForm({ id: '', name: '', price: '', description: '', category: '', image: '' });
+      setProductForm({ id: '', name: '', price: '', description: '', category: '', image: '', featured: false, searchKeywords: [] });
       setEditingProduct(false);
       showMessage('success', editingProduct ? 'Product updated!' : 'Product added successfully!');
     } catch (error) {
@@ -253,9 +312,25 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleBannerImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploadingBannerImage(true);
+    try {
+      const imageUrl = await uploadToCloudinary(file);
+      setBannerForm(prev => ({ ...prev, image: imageUrl }));
+      showMessage('success', 'Banner image uploaded successfully!');
+    } catch (error) {
+      showMessage('error', 'Failed to upload banner image');
+    } finally {
+      setUploadingBannerImage(false);
+    }
+  };
+
   const handleAddBanner = async () => {
     if (!bannerForm.title || !bannerForm.subtitle) {
-      showMessage('error', 'Please fill all banner fields');
+      showMessage('error', 'Please fill all required banner fields');
       return;
     }
 
@@ -265,7 +340,10 @@ export default function AdminDashboard() {
         id: editingBanner ? bannerForm.id : uuidv4(),
         title: bannerForm.title,
         subtitle: bannerForm.subtitle,
-        bg: bannerForm.bg
+        bg: bannerForm.bg,
+        image: bannerForm.image || '',
+        link: bannerForm.link || '',
+        order: parseInt(bannerForm.order) || 1
       };
 
       let updatedBanners;
@@ -277,6 +355,9 @@ export default function AdminDashboard() {
         updatedBanners = [...shopData.banners, newBanner];
       }
 
+      // Sort by order
+      updatedBanners.sort((a, b) => (a.order || 1) - (b.order || 1));
+
       const { error } = await supabase
         .from('shop_data')
         .update({ banners: updatedBanners, updated_at: new Date().toISOString() })
@@ -285,7 +366,7 @@ export default function AdminDashboard() {
       if (error) throw error;
 
       setShopData(prev => ({ ...prev, banners: updatedBanners }));
-      setBannerForm({ id: '', title: '', subtitle: '', bg: 'from-emerald-600 to-emerald-800' });
+      setBannerForm({ id: '', title: '', subtitle: '', bg: 'from-emerald-600 to-emerald-800', image: '', link: '', order: 1 });
       setEditingBanner(false);
       showMessage('success', editingBanner ? 'Banner updated!' : 'Banner added successfully!');
     } catch (error) {
@@ -542,13 +623,44 @@ export default function AdminDashboard() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
-                  <input
-                    type="text"
-                    value={productForm.category}
-                    onChange={(e) => setProductForm(prev => ({ ...prev, category: e.target.value }))}
-                    placeholder="Enter category"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  />
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {PREDEFINED_CATEGORIES.map(cat => (
+                      <button
+                        key={cat.slug}
+                        type="button"
+                        onClick={() => setProductForm(prev => ({ ...prev, category: cat.name }))}
+                        className={`px-4 py-3 rounded-lg border-2 transition flex flex-col items-center space-y-1 ${
+                          productForm.category === cat.name
+                            ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
+                            : 'border-gray-300 hover:border-emerald-400'
+                        }`}
+                      >
+                        <span className="text-2xl">{cat.icon}</span>
+                        <span className="text-sm font-semibold">{cat.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Mark as Featured Product</label>
+                  <div className="flex items-center space-x-3">
+                    <button
+                      type="button"
+                      onClick={() => setProductForm(prev => ({ ...prev, featured: !prev.featured }))}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
+                        productForm.featured ? 'bg-emerald-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                          productForm.featured ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                    <span className="text-sm text-gray-600">
+                      {productForm.featured ? 'Featured (will show on homepage)' : 'Not featured'}
+                    </span>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
@@ -594,7 +706,7 @@ export default function AdminDashboard() {
                   {editingProduct && (
                     <button
                       onClick={() => {
-                        setProductForm({ id: '', name: '', price: '', description: '', category: '', image: '' });
+                        setProductForm({ id: '', name: '', price: '', description: '', category: '', image: '', featured: false, searchKeywords: [] });
                         setEditingProduct(false);
                       }}
                       className="px-6 bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-3 rounded-lg transition"
@@ -623,7 +735,12 @@ export default function AdminDashboard() {
                       <h4 className="font-bold text-gray-800 mb-1">{product.name}</h4>
                       <p className="text-emerald-600 font-bold text-lg mb-2">₹{product.price}</p>
                       <p className="text-sm text-gray-600 mb-2 line-clamp-2">{product.description}</p>
-                      <p className="text-xs text-gray-500 mb-3">Category: {product.category}</p>
+                      <div className="flex items-center justify-between mb-3">
+                        <p className="text-xs text-gray-500">Category: {product.category}</p>
+                        {product.featured && (
+                          <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-semibold">⭐ Featured</span>
+                        )}
+                      </div>
                       <div className="flex space-x-2">
                         <button
                           onClick={() => handleEditProduct(product)}
@@ -677,29 +794,83 @@ export default function AdminDashboard() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   />
                 </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Banner Order/Sequence *</label>
+                    <select
+                      value={bannerForm.order}
+                      onChange={(e) => setBannerForm(prev => ({ ...prev, order: e.target.value }))}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    >
+                      <option value="1">1st Banner</option>
+                      <option value="2">2nd Banner</option>
+                      <option value="3">3rd Banner</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Background Gradient</label>
+                    <select
+                      value={bannerForm.bg}
+                      onChange={(e) => setBannerForm(prev => ({ ...prev, bg: e.target.value }))}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    >
+                      <option value="from-emerald-600 to-emerald-800">Emerald</option>
+                      <option value="from-green-600 to-green-800">Green</option>
+                      <option value="from-teal-600 to-teal-800">Teal</option>
+                      <option value="from-blue-600 to-blue-800">Blue</option>
+                      <option value="from-purple-600 to-purple-800">Purple</option>
+                      <option value="from-pink-600 to-pink-800">Pink</option>
+                      <option value="from-red-600 to-red-800">Red</option>
+                      <option value="from-orange-600 to-orange-800">Orange</option>
+                    </select>
+                  </div>
+                </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Background Gradient</label>
-                  <select
-                    value={bannerForm.bg}
-                    onChange={(e) => setBannerForm(prev => ({ ...prev, bg: e.target.value }))}
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Banner Image (Optional)</label>
+                  <div className="space-y-3">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleBannerImageUpload}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    />
+                    {uploadingBannerImage && (
+                      <div className="flex items-center space-x-2 text-emerald-600">
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-emerald-600"></div>
+                        <span className="text-sm">Uploading banner image...</span>
+                      </div>
+                    )}
+                    {bannerForm.image && (
+                      <div className="relative w-full h-32">
+                        <img src={bannerForm.image} alt="Banner Preview" className="w-full h-full object-cover rounded-lg" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Target Link/URL (Optional)</label>
+                  <input
+                    type="url"
+                    value={bannerForm.link}
+                    onChange={(e) => setBannerForm(prev => ({ ...prev, link: e.target.value }))}
+                    placeholder="https://example.com (leave empty if not clickable)"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  >
-                    <option value="from-emerald-600 to-emerald-800">Emerald</option>
-                    <option value="from-green-600 to-green-800">Green</option>
-                    <option value="from-teal-600 to-teal-800">Teal</option>
-                    <option value="from-blue-600 to-blue-800">Blue</option>
-                    <option value="from-purple-600 to-purple-800">Purple</option>
-                    <option value="from-pink-600 to-pink-800">Pink</option>
-                    <option value="from-red-600 to-red-800">Red</option>
-                    <option value="from-orange-600 to-orange-800">Orange</option>
-                  </select>
+                  />
                 </div>
                 {/* Preview */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Preview</label>
-                  <div className={`h-32 bg-gradient-to-br ${bannerForm.bg} text-white rounded-lg flex flex-col items-center justify-center`}>
-                    <h3 className="text-2xl font-bold mb-1">{bannerForm.title || 'Banner Title'}</h3>
-                    <p className="text-white/90">{bannerForm.subtitle || 'Banner Subtitle'}</p>
+                  <div className={`relative h-48 bg-gradient-to-br ${bannerForm.bg} text-white rounded-lg flex flex-col items-center justify-center overflow-hidden`}>
+                    {bannerForm.image && (
+                      <img src={bannerForm.image} alt="Banner" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+                    )}
+                    <div className="relative z-10 text-center px-4">
+                      <h3 className="text-2xl md:text-3xl font-bold mb-2">{bannerForm.title || 'Banner Title'}</h3>
+                      <p className="text-white/90 text-lg">{bannerForm.subtitle || 'Banner Subtitle'}</p>
+                      {bannerForm.link && (
+                        <p className="text-xs mt-2 text-white/70">🔗 Links to: {bannerForm.link}</p>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className="flex space-x-3">
@@ -714,7 +885,7 @@ export default function AdminDashboard() {
                   {editingBanner && (
                     <button
                       onClick={() => {
-                        setBannerForm({ id: '', title: '', subtitle: '', bg: 'from-emerald-600 to-emerald-800' });
+                        setBannerForm({ id: '', title: '', subtitle: '', bg: 'from-emerald-600 to-emerald-800', image: '', link: '', order: 1 });
                         setEditingBanner(false);
                       }}
                       className="px-6 bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-3 rounded-lg transition"
@@ -735,9 +906,20 @@ export default function AdminDashboard() {
                 <div className="space-y-4">
                   {shopData.banners.map(banner => (
                     <div key={banner.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition">
-                      <div className={`h-32 bg-gradient-to-br ${banner.bg} text-white rounded-lg flex flex-col items-center justify-center mb-4`}>
-                        <h3 className="text-2xl font-bold mb-1">{banner.title}</h3>
-                        <p className="text-white/90">{banner.subtitle}</p>
+                      <div className={`relative h-40 bg-gradient-to-br ${banner.bg} text-white rounded-lg flex flex-col items-center justify-center mb-4 overflow-hidden`}>
+                        {banner.image && (
+                          <img src={banner.image} alt={banner.title} className="absolute inset-0 w-full h-full object-cover opacity-40" />
+                        )}
+                        <div className="relative z-10 text-center px-4">
+                          <div className="flex items-center justify-center space-x-2 mb-2">
+                            <span className="bg-white/20 px-2 py-1 rounded text-xs font-bold">#{banner.order || 1}</span>
+                          </div>
+                          <h3 className="text-2xl font-bold mb-1">{banner.title}</h3>
+                          <p className="text-white/90">{banner.subtitle}</p>
+                          {banner.link && (
+                            <p className="text-xs mt-2 text-white/70">🔗 {banner.link}</p>
+                          )}
+                        </div>
                       </div>
                       <div className="flex space-x-2">
                         <button
