@@ -177,11 +177,11 @@ export default function Home() {
   const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   const generateWhatsAppMessage = () => {
-    let message = 'I want to purchase:\n\n';
+    let message = 'मला खरेदी करायची आहे:\n\n';
     cart.forEach((item, index) => {
       message += `${index + 1}) ${item.name} - ₹${item.price} × ${item.quantity} = ₹${item.price * item.quantity}\n`;
     });
-    message += `\nTotal: ₹${totalAmount}`;
+    message += `\nएकूण: ₹${totalAmount}`;
     return encodeURIComponent(message);
   };
 
