@@ -491,6 +491,47 @@ export default function AdminDashboard() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleBulkSaveProducts = async () => {
+    if (pendingProducts.length === 0) {
+      showMessage('error', 'No pending products to save');
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to save ${pendingProducts.length} pending product(s) to the database?`)) {
+      return;
+    }
+
+    setSaving(true);
+    try {
+      // Merge pending products with existing saved products
+      const productsToSave = pendingProducts.map(p => {
+        const { isPending, ...productData } = p; // Remove isPending flag
+        return productData;
+      });
+
+      const updatedProducts = [...shopData.products, ...productsToSave];
+
+      // Single bulk transaction to Supabase
+      const { error } = await supabase
+        .from('shop_data')
+        .update({ products: updatedProducts, updated_at: new Date().toISOString() })
+        .eq('admin_id', user.id);
+
+      if (error) throw error;
+
+      // Update state and clear pending queue
+      setShopData(prev => ({ ...prev, products: updatedProducts }));
+      clearPendingProducts();
+      
+      showMessage('success', `Successfully saved ${productsToSave.length} product(s) to database!`);
+    } catch (error) {
+      console.error('Error bulk saving products:', error);
+      showMessage('error', 'Failed to save products. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleDeleteProduct = async (productId) => {
     if (!confirm('Are you sure you want to delete this product?')) return;
 
