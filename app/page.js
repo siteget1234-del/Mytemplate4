@@ -282,7 +282,7 @@ export default function Home() {
               
               <div className="space-y-4 mb-6">
                 <div>
-                  <h3 className="font-bold text-gray-800 mb-2">Description:</h3>
+                  <h3 className="font-bold text-gray-800 mb-2">वर्णन:</h3>
                   <p className="text-gray-600 leading-relaxed">{selectedProduct.description}</p>
                 </div>
               </div>
@@ -296,7 +296,7 @@ export default function Home() {
                   className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-6 rounded-xl transition flex items-center justify-center space-x-2"
                 >
                   <Plus className="w-5 h-5" />
-                  <span>Add to Cart</span>
+                  <span>कार्टमध्ये जोडा</span>
                 </button>
                 <a
                   href={`tel:${shopData?.shop_number}`}
