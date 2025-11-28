@@ -983,49 +983,164 @@ export default function AdminDashboard() {
 
             {/* Products List */}
             <div className="bg-white rounded-xl shadow-md p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">All Products ({shopData.products.length}/100)</h3>
-              {shopData.products.length === 0 ? (
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800">
+                    All Products ({shopData.products.length + pendingProducts.length}/100)
+                  </h3>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Saved: {shopData.products.length} | Pending: {pendingProducts.length}
+                  </p>
+                </div>
+                {pendingProducts.length > 0 && (
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => {
+                        if (confirm('Are you sure you want to discard all pending products?')) {
+                          clearPendingProducts();
+                          showMessage('success', 'All pending products discarded');
+                        }
+                      }}
+                      disabled={saving}
+                      className="bg-gray-500 hover:bg-gray-600 text-white font-bold px-4 py-2 rounded-lg transition flex items-center space-x-2 disabled:opacity-50"
+                      data-testid="discard-all-btn"
+                    >
+                      <X className="w-5 h-5" />
+                      <span>Discard All</span>
+                    </button>
+                    <button
+                      onClick={handleBulkSaveProducts}
+                      disabled={saving}
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-lg transition flex items-center space-x-2 disabled:opacity-50"
+                      data-testid="save-all-btn"
+                    >
+                      <Save className="w-5 h-5" />
+                      <span>{saving ? 'Saving...' : `Save All (${pendingProducts.length})`}</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+              
+              {shopData.products.length === 0 && pendingProducts.length === 0 ? (
                 <p className="text-gray-500 text-center py-8">No products added yet</p>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {shopData.products.map(product => (
-                    <div key={product.id} className="border border-gray-200 rounded-lg p-3 hover:shadow-lg transition relative">
-                      <div className="flex gap-3">
-                        <div className="flex-1">
-                          <h4 className="font-bold text-gray-800 mb-1 pr-20">{product.name}</h4>
-                          <p className="text-emerald-600 font-bold text-lg mb-1">₹{product.price}</p>
-                          <p className="text-sm text-gray-600 mb-2 line-clamp-2">{product.description}</p>
-                          <div className="flex items-center justify-between mb-2">
-                            <p className="text-xs text-gray-500">Category: {product.category}</p>
-                            {product.featured && (
-                              <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-semibold">⭐ Featured</span>
-                            )}
-                          </div>
-                        </div>
-                        <img 
-                          src={product.image || 'https://via.placeholder.com/200x150?text=No+Image'} 
-                          alt={product.name}
-                          className="absolute top-3 right-3 w-16 h-16 object-cover rounded-lg"
-                        />
+                <div className="space-y-6">
+                  {/* Pending Products Section */}
+                  {pendingProducts.length > 0 && (
+                    <div>
+                      <div className="flex items-center space-x-2 mb-3">
+                        <div className="h-px flex-1 bg-orange-200"></div>
+                        <h4 className="text-sm font-bold text-orange-600 uppercase tracking-wide">
+                          Pending Products (Not Saved Yet)
+                        </h4>
+                        <div className="h-px flex-1 bg-orange-200"></div>
                       </div>
-                      <div className="flex space-x-2 mt-2">
-                        <button
-                          onClick={() => handleEditProduct(product)}
-                          className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition flex items-center justify-center space-x-1"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                          <span>Edit</span>
-                        </button>
-                        <button
-                          onClick={() => handleDeleteProduct(product.id)}
-                          className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition flex items-center justify-center space-x-1"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                          <span>Delete</span>
-                        </button>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {pendingProducts.map(product => (
+                          <div key={product.id} className="border-2 border-orange-300 bg-orange-50 rounded-lg p-3 hover:shadow-lg transition relative">
+                            <div className="absolute top-2 left-2 z-10">
+                              <span className="bg-orange-500 text-white text-xs px-2 py-1 rounded-full font-bold shadow-md">
+                                ⏳ PENDING
+                              </span>
+                            </div>
+                            <div className="flex gap-3 mt-6">
+                              <div className="flex-1">
+                                <h4 className="font-bold text-gray-800 mb-1 pr-20">{product.name}</h4>
+                                <p className="text-emerald-600 font-bold text-lg mb-1">₹{product.price}</p>
+                                <p className="text-sm text-gray-600 mb-2 line-clamp-2">{product.description}</p>
+                                <div className="flex items-center justify-between mb-2">
+                                  <p className="text-xs text-gray-500">Category: {product.category}</p>
+                                  {product.featured && (
+                                    <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-semibold">⭐ Featured</span>
+                                  )}
+                                </div>
+                              </div>
+                              <img 
+                                src={product.image || 'https://via.placeholder.com/200x150?text=No+Image'} 
+                                alt={product.name}
+                                className="absolute top-3 right-3 w-16 h-16 object-cover rounded-lg"
+                              />
+                            </div>
+                            <div className="flex space-x-2 mt-2">
+                              <button
+                                onClick={() => handleEditProduct(product)}
+                                className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition flex items-center justify-center space-x-1"
+                                data-testid={`edit-pending-${product.id}`}
+                              >
+                                <Edit2 className="w-4 h-4" />
+                                <span>Edit</span>
+                              </button>
+                              <button
+                                onClick={() => handleDeleteProduct(product.id, true)}
+                                className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition flex items-center justify-center space-x-1"
+                                data-testid={`delete-pending-${product.id}`}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                                <span>Remove</span>
+                              </button>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  ))}
+                  )}
+
+                  {/* Saved Products Section */}
+                  {shopData.products.length > 0 && (
+                    <div>
+                      {pendingProducts.length > 0 && (
+                        <div className="flex items-center space-x-2 mb-3">
+                          <div className="h-px flex-1 bg-emerald-200"></div>
+                          <h4 className="text-sm font-bold text-emerald-600 uppercase tracking-wide">
+                            Saved Products
+                          </h4>
+                          <div className="h-px flex-1 bg-emerald-200"></div>
+                        </div>
+                      )}
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {shopData.products.map(product => (
+                          <div key={product.id} className="border border-gray-200 rounded-lg p-3 hover:shadow-lg transition relative">
+                            <div className="flex gap-3">
+                              <div className="flex-1">
+                                <h4 className="font-bold text-gray-800 mb-1 pr-20">{product.name}</h4>
+                                <p className="text-emerald-600 font-bold text-lg mb-1">₹{product.price}</p>
+                                <p className="text-sm text-gray-600 mb-2 line-clamp-2">{product.description}</p>
+                                <div className="flex items-center justify-between mb-2">
+                                  <p className="text-xs text-gray-500">Category: {product.category}</p>
+                                  {product.featured && (
+                                    <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-semibold">⭐ Featured</span>
+                                  )}
+                                </div>
+                              </div>
+                              <img 
+                                src={product.image || 'https://via.placeholder.com/200x150?text=No+Image'} 
+                                alt={product.name}
+                                className="absolute top-3 right-3 w-16 h-16 object-cover rounded-lg"
+                              />
+                            </div>
+                            <div className="flex space-x-2 mt-2">
+                              <button
+                                onClick={() => handleEditProduct(product)}
+                                className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition flex items-center justify-center space-x-1"
+                                data-testid={`edit-saved-${product.id}`}
+                              >
+                                <Edit2 className="w-4 h-4" />
+                                <span>Edit</span>
+                              </button>
+                              <button
+                                onClick={() => handleDeleteProduct(product.id, false)}
+                                className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition flex items-center justify-center space-x-1"
+                                data-testid={`delete-saved-${product.id}`}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                                <span>Delete</span>
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
