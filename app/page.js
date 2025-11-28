@@ -638,8 +638,8 @@ export default function Home() {
           <div className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col">
             <div className="bg-gradient-to-r from-emerald-700 to-emerald-600 text-white p-5 flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold">My Cart</h2>
-                <p className="text-sm text-emerald-100">{cartItemCount} items</p>
+                <h2 className="text-2xl font-bold">माझी कार्ट</h2>
+                <p className="text-sm text-emerald-100">{cartItemCount} वस्तू</p>
               </div>
               <button onClick={() => setShowCart(false)} className="hover:bg-emerald-600 p-2 rounded-full transition">
                 <X className="w-6 h-6" />
@@ -652,8 +652,8 @@ export default function Home() {
                   <div className="bg-gray-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4">
                     <ShoppingCart className="w-12 h-12 text-gray-400" />
                   </div>
-                  <p className="text-gray-500 text-lg font-semibold">Your cart is empty</p>
-                  <p className="text-gray-400 text-sm mt-2">Add products to start shopping</p>
+                  <p className="text-gray-500 text-lg font-semibold">तुमची कार्ट रिकामी आहे</p>
+                  <p className="text-gray-400 text-sm mt-2">खरेदी सुरू करण्यासाठी उत्पादने जोडा</p>
                 </div>
               ) : (
                 <div className="space-y-4">
