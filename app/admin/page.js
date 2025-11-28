@@ -447,8 +447,9 @@ export default function AdminDashboard() {
       return;
     }
 
-    // Check product limit - max 100 products
-    if (!editingProduct && shopData.products.length >= 100) {
+    // Check product limit - max 100 products (saved + pending)
+    const totalProducts = shopData.products.length + pendingProducts.length;
+    if (!editingProduct && totalProducts >= 100) {
       showMessage('error', 'Maximum 100 products allowed');
       return;
     }
@@ -466,32 +467,19 @@ export default function AdminDashboard() {
         category: productForm.category,
         image: productForm.image,
         featured: productForm.featured || false,
-        searchKeywords: searchKeywords
+        searchKeywords: searchKeywords,
+        isPending: true // Mark as pending/staged
       };
 
-      let updatedProducts;
-      if (editingProduct) {
-        updatedProducts = shopData.products.map(p => 
-          p.id === productForm.id ? newProduct : p
-        );
-      } else {
-        updatedProducts = [...shopData.products, newProduct];
-      }
+      // Save to Local Storage instead of Supabase
+      savePendingProductToStorage(newProduct);
 
-      const { error } = await supabase
-        .from('shop_data')
-        .update({ products: updatedProducts, updated_at: new Date().toISOString() })
-        .eq('admin_id', user.id);
-
-      if (error) throw error;
-
-      setShopData(prev => ({ ...prev, products: updatedProducts }));
       setProductForm({ id: '', name: '', price: '', description: '', category: '', image: '', featured: false, searchKeywords: [] });
       setEditingProduct(false);
-      showMessage('success', editingProduct ? 'Product updated!' : 'Product added successfully!');
+      showMessage('success', editingProduct ? 'Product updated in queue!' : 'Product added to queue! Click "Save All" to commit.');
     } catch (error) {
-      console.error('Error saving product:', error);
-      showMessage('error', 'Failed to save product');
+      console.error('Error staging product:', error);
+      showMessage('error', 'Failed to stage product');
     } finally {
       setSaving(false);
     }
