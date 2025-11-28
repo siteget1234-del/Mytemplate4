@@ -356,14 +356,14 @@ export default function Home() {
                         className="w-full text-left px-4 py-2 text-gray-700 hover:bg-emerald-50 flex items-center space-x-2"
                       >
                         <Settings className="w-4 h-4" />
-                        <span>Admin Dashboard</span>
+                        <span>अ‍ॅडमिन डॅशबोर्ड</span>
                       </button>
                       <button
                         onClick={handleSignOut}
                         className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 flex items-center space-x-2"
                       >
                         <LogOut className="w-4 h-4" />
-                        <span>Sign Out</span>
+                        <span>साइन आउट</span>
                       </button>
                     </div>
                   )}
