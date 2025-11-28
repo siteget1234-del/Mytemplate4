@@ -894,28 +894,37 @@ export default function AdminDashboard() {
 
             {/* Banners List */}
             <div className="bg-white rounded-xl shadow-md p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">All Banners</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">All Banners ({shopData.banners.length}/5)</h3>
               {shopData.banners.length === 0 ? (
                 <p className="text-gray-500 text-center py-8">No banners added yet</p>
               ) : (
                 <div className="space-y-4">
                   {shopData.banners.map(banner => (
                     <div key={banner.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition">
-                      <div className={`relative h-40 bg-gradient-to-br ${banner.bg} text-white rounded-lg flex flex-col items-center justify-center mb-4 overflow-hidden`}>
-                        {banner.image && (
-                          <img src={banner.image} alt={banner.title} className="absolute inset-0 w-full h-full object-cover opacity-40" />
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-bold">
+                          Banner {banner.order || 1}
+                        </span>
+                        {banner.link && (
+                          <span className="text-xs text-gray-500 flex items-center">
+                            🔗 Clickable
+                          </span>
                         )}
-                        <div className="relative z-10 text-center px-4">
-                          <div className="flex items-center justify-center space-x-2 mb-2">
-                            <span className="bg-white/20 px-2 py-1 rounded text-xs font-bold">#{banner.order || 1}</span>
-                          </div>
-                          <h3 className="text-2xl font-bold mb-1">{banner.title}</h3>
-                          <p className="text-white/90">{banner.subtitle}</p>
-                          {banner.link && (
-                            <p className="text-xs mt-2 text-white/70">🔗 {banner.link}</p>
-                          )}
-                        </div>
                       </div>
+                      <div className="relative h-40 bg-gray-100 rounded-lg mb-4 overflow-hidden">
+                        {banner.image ? (
+                          <img src={banner.image} alt={`Banner ${banner.order}`} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-gray-400">
+                            No image
+                          </div>
+                        )}
+                      </div>
+                      {banner.link && (
+                        <p className="text-xs text-gray-600 mb-3 truncate">
+                          <strong>Link:</strong> {banner.link}
+                        </p>
+                      )}
                       <div className="flex space-x-2">
                         <button
                           onClick={() => handleEditBanner(banner)}
