@@ -532,9 +532,17 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleDeleteProduct = async (productId) => {
+  const handleDeleteProduct = async (productId, isPending = false) => {
     if (!confirm('Are you sure you want to delete this product?')) return;
 
+    // If product is pending (in Local Storage), just remove from queue
+    if (isPending) {
+      removePendingProductFromStorage(productId);
+      showMessage('success', 'Pending product removed from queue!');
+      return;
+    }
+
+    // Otherwise, delete from Supabase
     setSaving(true);
     try {
       const updatedProducts = shopData.products.filter(p => p.id !== productId);
