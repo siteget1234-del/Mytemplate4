@@ -602,7 +602,7 @@ export default function Home() {
       {!showSearch && !selectedCategory && (
         <footer className="bg-emerald-700 text-white py-8 mt-12">
           <div className="container mx-auto px-4">
-            <h3 className="text-xl font-bold mb-4">Contact Us</h3>
+            <h3 className="text-xl font-bold mb-4">आमच्याशी संपर्क साधा</h3>
             <div className="space-y-2">
               <div className="flex items-start space-x-2">
                 <span className="text-red-400">📍</span>
@@ -610,19 +610,19 @@ export default function Home() {
               </div>
               <div className="flex items-center space-x-2">
                 <span className="text-red-400">📞</span>
-                <a href={`tel:${shopData?.shop_number}`} className="hover:text-emerald-200">Phone: {shopData?.shop_number || '0000000000'}</a>
+                <a href={`tel:${shopData?.shop_number}`} className="hover:text-emerald-200">फोन: {shopData?.shop_number || '0000000000'}</a>
               </div>
             </div>
             <div className="border-t border-emerald-600 mt-6 pt-6">
               <div className="flex items-center justify-between">
-                <p className="text-emerald-200">© 2025 {shopData?.shop_name || 'Shop Name'}. All rights reserved.</p>
+                <p className="text-emerald-200">© 2025 {shopData?.shop_name || 'Shop Name'}. सर्व हक्क राखीव.</p>
                 {!user && (
                   <button
                     onClick={() => router.push('/login')}
                     className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition flex items-center space-x-1.5 text-sm font-semibold"
                   >
                     <span className="text-base">⚙️</span>
-                    <span>Admin</span>
+                    <span>अ‍ॅडमिन</span>
                   </button>
                 )}
               </div>
