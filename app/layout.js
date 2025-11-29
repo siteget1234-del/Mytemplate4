@@ -16,6 +16,8 @@ export default function RootLayout({ children }) {
           name="google-site-verification"
           content="u-r9HkP998MQZv_is0kOAseLjYitBbQIETaoxPGVl64"
         />
+            <link rel="icon" href="/favicon.ico" />
+<link rel="icon" type="image/png" href="/icon.png" />
       </head>
       <body className={inter.className}>{children}</body>
     </html>
