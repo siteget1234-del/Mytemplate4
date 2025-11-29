@@ -4,8 +4,8 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'श्री गणेश कृषी केंद्र - पिंपळगाव बसवंत',
-  description: 'कृषी उत्पादने, बियाणे, खते, संरक्षण साधने - नाशिक, महाराष्ट्र',
+  title: 'योगेश कृषी केंद्र - किनगाव अहमदपूर',
+  description: 'कृषी उत्पादने, बियाणे, खते, संरक्षण साधने - लातूर, महाराष्ट्र',
 };
 
 export default function RootLayout({ children }) {
