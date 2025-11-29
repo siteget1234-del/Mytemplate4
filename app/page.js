@@ -600,7 +600,6 @@ export default function Home() {
 
 
 
-</section>
 
 {/* ABOUT SECTION – SEO BOOST */}
 {!showSearch && !selectedCategory && (
